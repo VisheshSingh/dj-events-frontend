@@ -1,13 +1,14 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import Layout from '../../components/Layout';
 
-const SingleEventPage = () => {
+const EventPage = () => {
   const router = useRouter();
   return (
-    <div>
+    <Layout title='Event page'>
       <h1>My Event - {router.query.slug}</h1>
-    </div>
+    </Layout>
   );
 };
 
-export default SingleEventPage;
+export default EventPage;

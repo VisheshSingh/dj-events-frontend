@@ -1,11 +1,12 @@
 import React from 'react';
+import Layout from '../../components/Layout';
 
-const index = () => {
+const Events = () => {
   return (
-    <div>
+    <Layout title='All events'>
       <h1>All events</h1>
-    </div>
+    </Layout>
   );
 };
 
-export default index;
+export default Events;
