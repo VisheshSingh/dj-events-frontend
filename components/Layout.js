@@ -2,6 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 
 import styles from '../styles/Layout.module.css';
+import Header from './Header';
+import Footer from './Footer';
 
 const Layout = ({ title, description, keywords, children }) => {
   return (
@@ -11,7 +13,9 @@ const Layout = ({ title, description, keywords, children }) => {
         <meta id='description' name={description} />
         <meta id='keywords' name={keywords} />
       </Head>
+      <Header />
       <div className={styles.container}>{children}</div>
+      <Footer />
     </div>
   );
 };
