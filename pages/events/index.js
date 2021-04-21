@@ -1,25 +1,28 @@
-import React from 'react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 import { API_URL } from '@/config/globals';
+import EventItem from 'components/EventItem';
 
-const Events = ({ events }) => {
-  console.log({ events });
+export default function EventsPage({ events }) {
   return (
-    <Layout title='All events'>
-      <h1>All events</h1>
+    <Layout>
+      <h1>All Events</h1>
+      {events.length === 0 && <h3>No events to show</h3>}
+      {events.map((evt) => (
+        <EventItem key={evt.id} evt={evt} />
+      ))}
     </Layout>
   );
-};
+}
 
-export default Events;
-
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const res = await fetch(`${API_URL}/api/events`);
   const events = await res.json();
 
   return {
     props: {
-      events: events,
+      events,
+      revalidate: 1,
     },
   };
 }
