@@ -1,14 +1,32 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { API_URL } from '@/config/globals';
 import Layout from '@/components/Layout';
 
-const EventPage = () => {
-  const router = useRouter();
-  return (
-    <Layout title='Event page'>
-      <h1>My Event - {router.query.slug}</h1>
-    </Layout>
-  );
+const EventPage = ({ events }) => {
+  console.log({ events });
+  return <Layout title='Event page'></Layout>;
 };
 
 export default EventPage;
+
+export async function getStaticPaths() {
+  const res = await fetch(`${API_URL}/api/events`);
+  const events = await res.json();
+  const paths = events.map((evt) => ({ params: { slug: evt.slug } }));
+  return {
+    paths,
+    fallback: true,
+  };
+}
+
+export async function getStaticProps({ params: { slug } }) {
+  const res = await fetch(`${API_URL}/api/events/${slug}`);
+  const event = await res.json();
+
+  return {
+    props: {
+      events: event[0],
+      revalidate: 1,
+    },
+  };
+}
