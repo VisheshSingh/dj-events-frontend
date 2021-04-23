@@ -5,11 +5,29 @@ import styles from '@/styles/Event.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EventPage = ({ evt }) => {
-  const deleteHandler = () => {
-    console.log('delete');
+  const router = useRouter();
+
+  const deleteHandler = async () => {
+    if (confirm('Are you sure?')) {
+      const res = await fetch(`${API_URL}/events/${evt.id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      } else {
+        router.push('/events');
+      }
+    }
   };
+
   return (
     <Layout title={evt.name}>
       <div className={styles.event}>
