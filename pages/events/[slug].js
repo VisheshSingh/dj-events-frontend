@@ -32,6 +32,7 @@ const EventPage = ({ evt }) => {
     <Layout title={evt.name}>
       <div className={styles.event}>
         <div className={styles.controls}>
+          <ToastContainer />
           <Link href={`/events/edit/${evt.id}`}>
             <a>
               <FaPencilAlt /> Edit event
