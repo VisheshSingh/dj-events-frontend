@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import styles from '@/styles/Form.module.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { API_URL } from 'config/globals';
 
 const AddEvents = () => {
   const [values, setValues] = useState({
@@ -22,9 +25,31 @@ const AddEvents = () => {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(values);
+
+    const hasEmptyFields = Object.values(values).some((item) => item === '');
+
+    if (hasEmptyFields) {
+      toast.error('Please fill in all fields!');
+    }
+
+    const res = await fetch(`${API_URL}/events`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+
+    if (!res.ok) {
+      toast.error('Something went wrong');
+    } else {
+      const evt = await res.json();
+      router.push(`/events/${evt.slug}`);
+      toast.success('New event added!');
+    }
+
     setValues({
       name: '',
       performers: '',
@@ -39,7 +64,7 @@ const AddEvents = () => {
   return (
     <Layout title='Add an event'>
       <h1>Add Events page</h1>
-
+      <ToastContainer />
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
           <div>
