@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { API_URL } from 'config/globals';
 import { FaImage } from 'react-icons/fa';
 import Modal from 'components/Modal';
+import ImageUpload from 'components/ImageUpload';
 
 const EditEvent = ({ evt }) => {
   const [values, setValues] = useState({
@@ -71,6 +72,14 @@ const EditEvent = ({ evt }) => {
       time: '',
       description: '',
     });
+  };
+
+  const imageUploaded = async () => {
+    console.log('uploaded');
+    const res = await fetch(`${API_URL}/events/${evt.id}`);
+    const data = await res.json();
+    setImagePreview(data.image.formats.thumbnail.url);
+    setShowModal(false);
   };
 
   return (
@@ -172,7 +181,7 @@ const EditEvent = ({ evt }) => {
 
       {showModal && (
         <Modal onClose={() => setShowModal(false)} show={showModal}>
-          Image upload
+          <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
         </Modal>
       )}
     </Layout>
