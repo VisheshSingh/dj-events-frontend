@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_URL } from 'config/globals';
 import { FaImage } from 'react-icons/fa';
+import Modal from 'components/Modal';
 
 const EditEvent = ({ evt }) => {
   const [values, setValues] = useState({
@@ -24,6 +25,8 @@ const EditEvent = ({ evt }) => {
   const [imagePreview, setImagePreview] = useState(
     evt.image ? evt.image.formats.thumbnail.url : null
   );
+
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
 
@@ -162,10 +165,16 @@ const EditEvent = ({ evt }) => {
       )}
 
       <div>
-        <button className='btn-secondary'>
+        <button className='btn-secondary' onClick={() => setShowModal(true)}>
           <FaImage /> Set Image
         </button>
       </div>
+
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)} show={showModal}>
+          Image upload
+        </Modal>
+      )}
     </Layout>
   );
 };
