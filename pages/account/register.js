@@ -5,12 +5,15 @@ import styles from '@/styles/AuthForm.module.css';
 import Layout from '@/components/Layout';
 import { FaUser } from 'react-icons/fa';
 import Link from 'next/link';
+import { AuthContext } from 'context/AuthContext';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const { user, register, error } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,7 +23,7 @@ const RegisterPage = () => {
       return;
     }
 
-    console.log({ username, email, password });
+    register({ username, email, password });
   };
 
   return (
