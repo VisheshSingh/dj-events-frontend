@@ -1,3 +1,4 @@
+import { NEXT_URL } from 'config/globals';
 import React, { useState, createContext } from 'react';
 
 export const AuthContext = createContext();
@@ -13,7 +14,22 @@ const AuthProvider = ({ children }) => {
 
   // Login
   const login = async ({ email: identifier, password }) => {
-    console.log({ identifier, password });
+    const res = await fetch(`${NEXT_URL}/api/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ identifier, password }),
+    });
+
+    const data = await res.json();
+    console.log({ data });
+    if (res.ok) {
+      setUser(data.user);
+      setError(null);
+    } else {
+      setError(data.message);
+    }
   };
 
   // Logout
