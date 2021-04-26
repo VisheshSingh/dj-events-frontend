@@ -23,11 +23,11 @@ const Header = () => {
           <li>
             <Link href='/events'>Events</Link>
           </li>
-          <li>
-            <Link href='/account/dashboard'>Dashboard</Link>
-          </li>
           {user ? (
             <>
+              <li>
+                <Link href='/account/dashboard'>Dashboard</Link>
+              </li>
               <li>
                 <Link href='/events/add'>Add Event</Link>
               </li>

@@ -1,4 +1,4 @@
-import { NEXT_URL } from 'config/globals';
+import { API_URL, NEXT_URL } from 'config/globals';
 import { useRouter } from 'next/router';
 import React, { useState, createContext, useEffect } from 'react';
 
@@ -39,7 +39,14 @@ const AuthProvider = ({ children }) => {
 
   // Logout
   const logout = async () => {
-    console.log('Logout');
+    const res = await fetch(`${NEXT_URL}/api/logout`, {
+      method: 'POST',
+    });
+
+    if (res.ok) {
+      setUser(null);
+      router.push('/');
+    }
   };
 
   // Check Logged In
