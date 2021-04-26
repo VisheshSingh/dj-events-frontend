@@ -14,7 +14,22 @@ const AuthProvider = ({ children }) => {
 
   // Register
   const register = async (user) => {
-    console.log(user);
+    const res = await fetch(`${NEXT_URL}/api/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+
+    const data = await res.json();
+    // console.log({ data });
+    if (res.ok) {
+      setUser(data.user);
+    } else {
+      setError(data.message);
+      setError(null);
+    }
   };
 
   // Login
@@ -28,12 +43,12 @@ const AuthProvider = ({ children }) => {
     });
 
     const data = await res.json();
-    console.log({ data });
+    // console.log({ data });
     if (res.ok) {
       setUser(data.user);
-      setError(null);
     } else {
       setError(data.message);
+      setError(null);
     }
   };
 
@@ -44,8 +59,8 @@ const AuthProvider = ({ children }) => {
     });
 
     if (res.ok) {
-      setUser(null);
       router.push('/');
+      setUser(null);
     }
   };
 
