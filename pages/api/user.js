@@ -18,7 +18,7 @@ export default async (req, res) => {
     });
 
     const user = strapiRes.json();
-    console.log(strapiRes);
+
     if (strapiRes.ok) {
       res.status(200).json({ user });
     } else {

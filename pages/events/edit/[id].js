@@ -75,7 +75,6 @@ const EditEvent = ({ evt }) => {
   };
 
   const imageUploaded = async () => {
-    console.log('uploaded');
     const res = await fetch(`${API_URL}/events/${evt.id}`);
     const data = await res.json();
     setImagePreview(data.image.formats.thumbnail.url);
@@ -193,8 +192,6 @@ export default EditEvent;
 export async function getServerSideProps({ params: { id }, req }) {
   const res = await fetch(`${API_URL}/events/${id}`);
   const evt = await res.json();
-
-  console.log(req.headers.cookie);
 
   return {
     props: {
