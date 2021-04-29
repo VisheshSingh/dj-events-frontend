@@ -1,4 +1,4 @@
-import { API_URL, NEXT_URL } from 'config/globals';
+import { NEXT_URL } from '@/config/globals';
 import { useRouter } from 'next/router';
 import React, { useState, createContext, useEffect } from 'react';
 
@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => checkUserLoggedIn());
 
-  // Register
+  // Register user
   const register = async (user) => {
     const res = await fetch(`${NEXT_URL}/api/register`, {
       method: 'POST',
@@ -23,55 +23,59 @@ const AuthProvider = ({ children }) => {
     });
 
     const data = await res.json();
-    // console.log({ data });
+
     if (res.ok) {
       setUser(data.user);
+      router.push('/account/dashboard');
     } else {
       setError(data.message);
       setError(null);
     }
   };
 
-  // Login
+  // Login user
   const login = async ({ email: identifier, password }) => {
     const res = await fetch(`${NEXT_URL}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ identifier, password }),
+      body: JSON.stringify({
+        identifier,
+        password,
+      }),
     });
 
     const data = await res.json();
-    // console.log({ data });
+
     if (res.ok) {
       setUser(data.user);
+      router.push('/account/dashboard');
     } else {
       setError(data.message);
       setError(null);
     }
   };
 
-  // Logout
+  // Logout user
   const logout = async () => {
     const res = await fetch(`${NEXT_URL}/api/logout`, {
       method: 'POST',
     });
 
     if (res.ok) {
-      router.push('/');
       setUser(null);
+      router.push('/');
     }
   };
 
-  // Check Logged In
+  // Check if user is logged in
   const checkUserLoggedIn = async () => {
     const res = await fetch(`${NEXT_URL}/api/user`);
     const data = await res.json();
 
     if (res.ok) {
       setUser(data.user);
-      router.push('/account/dashboard');
     } else {
       setUser(null);
     }
