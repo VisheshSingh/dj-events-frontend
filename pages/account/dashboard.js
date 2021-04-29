@@ -2,11 +2,22 @@ import Layout from 'components/Layout';
 import { parseCookies } from '@/helpers/index';
 import React from 'react';
 import { API_URL } from 'config/globals';
+import styles from '@/styles/Dashboard.module.css';
+import DashboardEvent from 'components/DashboardEvent';
 
 const dashboard = ({ events }) => {
+  const onDelete = (id) => console.log(id);
+
   return (
     <Layout title='Dashboard'>
-      <h2>Dashboard</h2>
+      <div className={styles.dash}>
+        <h1>Dashboard</h1>
+        <h3>My events</h3>
+      </div>
+      {events &&
+        events.map((evt) => (
+          <DashboardEvent key={evt.id} evt={evt} handleDelete={onDelete} />
+        ))}
     </Layout>
   );
 };
