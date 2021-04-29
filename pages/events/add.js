@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { parseCookies } from '@/helpers/index';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import styles from '@/styles/Form.module.css';
@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_URL } from 'config/globals';
 
-const AddEvents = () => {
+const AddEvents = ({ token }) => {
   const [values, setValues] = useState({
     name: '',
     performers: '',
@@ -39,11 +39,16 @@ const AddEvents = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     });
 
     if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        toast.error('Unauthorized!');
+        return;
+      }
       toast.error('Something went wrong');
       return;
     } else {
@@ -149,3 +154,13 @@ const AddEvents = () => {
 };
 
 export default AddEvents;
+
+export async function getServerSideProps({ req }) {
+  const { token } = parseCookies(req);
+
+  return {
+    props: {
+      token,
+    },
+  };
+}
