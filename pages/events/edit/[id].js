@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import Link from 'next/link';
+import { parseCookies } from '@/helpers/index';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
@@ -12,7 +12,7 @@ import { FaImage } from 'react-icons/fa';
 import Modal from 'components/Modal';
 import ImageUpload from 'components/ImageUpload';
 
-const EditEvent = ({ evt }) => {
+const EditEvent = ({ evt, token }) => {
   const [values, setValues] = useState({
     name: evt.name,
     performers: evt.performers,
@@ -50,17 +50,22 @@ const EditEvent = ({ evt }) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     });
 
     if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        toast.error('Unauthorized!');
+        return;
+      }
       toast.error('Something went wrong');
       return;
     } else {
       const evt = await res.json();
       router.push(`/events/${evt.slug}`);
-      toast.success('New event added!');
+      toast.success('Event updated successfully!');
     }
 
     setValues({
@@ -180,7 +185,11 @@ const EditEvent = ({ evt }) => {
 
       {showModal && (
         <Modal onClose={() => setShowModal(false)} show={showModal}>
-          <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+          <ImageUpload
+            evtId={evt.id}
+            imageUploaded={imageUploaded}
+            token={token}
+          />
         </Modal>
       )}
     </Layout>
@@ -190,12 +199,14 @@ const EditEvent = ({ evt }) => {
 export default EditEvent;
 
 export async function getServerSideProps({ params: { id }, req }) {
+  const { token } = parseCookies(req);
   const res = await fetch(`${API_URL}/events/${id}`);
   const evt = await res.json();
 
   return {
     props: {
       evt,
+      token,
     },
   };
 }

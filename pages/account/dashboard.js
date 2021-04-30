@@ -4,9 +4,29 @@ import React from 'react';
 import { API_URL } from 'config/globals';
 import styles from '@/styles/Dashboard.module.css';
 import DashboardEvent from 'components/DashboardEvent';
+import { useRouter } from 'next/router';
 
-const dashboard = ({ events }) => {
-  const onDelete = (id) => console.log(id);
+const dashboard = ({ events, token }) => {
+  const router = useRouter();
+
+  const onDelete = async (id) => {
+    if (confirm('Are you sure?')) {
+      const res = await fetch(`${API_URL}/events/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      } else {
+        router.reload('/');
+      }
+    }
+  };
 
   return (
     <Layout title='Dashboard'>
@@ -39,6 +59,7 @@ export async function getServerSideProps({ req }) {
   return {
     props: {
       events,
+      token,
     },
   };
 }
