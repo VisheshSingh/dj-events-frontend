@@ -13,9 +13,7 @@ export default function SearchPage({ events }) {
       <Link href='/events'>Go Back</Link>
       <h1>Search results for {router.query.term}</h1>
       {events.length === 0 && <h3>No events to show</h3>}
-      {events.map((evt) => (
-        <EventItem key={evt.id} evt={evt} />
-      ))}
+      {events && events.map((evt) => <EventItem key={evt.id} evt={evt} />)}
     </Layout>
   );
 }
