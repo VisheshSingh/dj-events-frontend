@@ -1,6 +1,7 @@
 import React from 'react';
 import { API_URL } from '@/config/globals';
 import Layout from '@/components/Layout';
+import EventMap from '@/components/EventMap';
 import styles from '@/styles/Event.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -67,6 +68,8 @@ const EventPage = ({ evt }) => {
         <h3>Venue: {evt.venue}</h3>
         <p>{evt.address}</p>
       </div>
+
+      <EventMap evt={evt} />
 
       <Link href='/events'>
         <a className={styles.back}>{'<'} Go Back</a>
