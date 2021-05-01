@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
 
   const router = useRouter();
 
-  useEffect(() => checkUserLoggedIn());
+  useEffect(() => checkUserLoggedIn(), []);
 
   // Register user
   const register = async (user) => {
